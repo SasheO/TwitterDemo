@@ -4,8 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -42,6 +47,16 @@ public class TimelineActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(TimelineActivity.this);
         populateHomeTimeline();
+
+        // added for logout
+        Button btnLogout = findViewById(R.id.btnLogOut);
+        btnLogout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(TimelineActivity.this, "Logout button clicked", Toast.LENGTH_LONG);
+                onLogoutButton();
+            }
+        });
     }
 
         private void populateHomeTimeline() {
@@ -69,5 +84,21 @@ public class TimelineActivity extends AppCompatActivity {
                 }
             });
     }
+
+    void onLogoutButton()
+    {
+    // forget who is logged in
+        TwitterApp.getRestClient(this).clearAccessToken();
+        // navigate backwards to Login screen
+        Intent i = new Intent(this, LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // this makes sure the Back button won't work
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // same as above
+        startActivity(i);
+    }
+
+
+
+
+
 
 }
