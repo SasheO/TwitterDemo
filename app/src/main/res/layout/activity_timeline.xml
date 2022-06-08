@@ -10,10 +10,9 @@
         android:id="@+id/rvHomeTimeline"
         android:layout_width="405dp"
         android:layout_height="681dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
         app:layout_constraintTop_toBottomOf="@+id/btnLogOut" />
 
     <Button
