@@ -26,25 +26,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     this.listTweet = listTweet;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView ivUserPic;
-        TextView tvUsername;
-        TextView tvTweetBody;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivUserPic = itemView.findViewById(R.id.ivUserPic);
-            tvTweetBody = itemView.findViewById(R.id.tvTweetBody);
-            tvUsername = itemView.findViewById(R.id.tvUsername);
-        }
-
-        public void bind(Tweet tweet) {
-            tvUsername.setText(tweet.user.screenName);
-            tvTweetBody.setText(tweet.body);
-            Glide.with(context).load(tweet.user.publicImageURL).into(ivUserPic);
-        }
-    }
     // this inflates the layout for each row
     @NonNull
     @Override
@@ -71,6 +52,26 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return listTweet.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView ivUserPic;
+        TextView tvUsername;
+        TextView tvTweetBody;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ivUserPic = itemView.findViewById(R.id.ivUserPic);
+            tvTweetBody = itemView.findViewById(R.id.tvTweetBody);
+            tvUsername = itemView.findViewById(R.id.tvUsername);
+        }
+
+        public void bind(Tweet tweet) {
+            tvUsername.setText(tweet.user.screenName);
+            tvTweetBody.setText(tweet.body);
+            Glide.with(context).load(tweet.user.publicImageURL).into(ivUserPic);
+        }
     }
 
 

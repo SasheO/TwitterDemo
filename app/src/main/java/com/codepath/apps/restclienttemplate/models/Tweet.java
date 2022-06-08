@@ -3,10 +3,12 @@ package com.codepath.apps.restclienttemplate.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel
 public class Tweet {
     public String body;
     public String createdAt;
@@ -24,14 +26,19 @@ public class Tweet {
         this.user = user;
     }
 
+    public Tweet(){}
+
     // function to return a tweet populating it with information from a json object
     public static Tweet fromJSONObject(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet(); // unsure if tweet is pass by reference or value, might result in error
 
         tweet.setBody(jsonObject.getString("text"));
         tweet.setCreatedAt(jsonObject.getString("created_at"));
-        tweet.user = new User();
-        tweet.user.fromJson(jsonObject.getJSONObject("user"));
+
+        User user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.user = user;
+//        tweet.user = new User();
+//        tweet.user.fromJson(jsonObject.getJSONObject("user"));
         return  tweet;
     }
         // function to return a list of tweets gotten from a json array of tweets
