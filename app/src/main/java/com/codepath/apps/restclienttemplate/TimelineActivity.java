@@ -110,7 +110,8 @@ public class TimelineActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.miComposeTweet:
                 Toast.makeText(TimelineActivity.this, "Compose Tweet button clicked", Toast.LENGTH_LONG).show();
-                composeMessage();
+                Intent intent = new Intent(TimelineActivity.this, ComposeTweetActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
