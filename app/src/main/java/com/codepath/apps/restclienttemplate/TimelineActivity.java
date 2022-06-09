@@ -1,10 +1,15 @@
 package com.codepath.apps.restclienttemplate;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +25,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +38,27 @@ public class TimelineActivity extends AppCompatActivity {
     TwitterClient client;
     List<Tweet> tweetList;
     TweetAdapter adapter;
+    // this is the request code for startActivityForResult
+    public final int REQUEST_CODE = 20;
 
+
+    // this is for getting the result from composeTweetActivity, revisit this for a guide: https://guides.codepath.com/android/Using-Intents-to-Create-Flows#returning-data-result-to-parent-activity
+    ActivityResultLauncher<Intent> editActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    // If the user comes back to this activity from EditActivity
+                    // with no error or cancellation
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        // Get the data passed from EditActivity
+                        Tweet newTweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+                        tweetList.add(0, newTweet);
+                        adapter.notifyDataSetChanged();
+                        Log.i("TimelineActivity", "tweet added to homepage");
+                    }
+                }
+            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +82,7 @@ public class TimelineActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(TimelineActivity.this, "Logout button clicked", Toast.LENGTH_LONG);
+                Toast.makeText(TimelineActivity.this, "logging out...", Toast.LENGTH_LONG);
                 onLogoutButton();
             }
         });
@@ -107,19 +133,19 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+
         switch (item.getItemId()) {
             case R.id.miComposeTweet:
-                Toast.makeText(TimelineActivity.this, "Compose Tweet button clicked", Toast.LENGTH_LONG).show();
-                composeMessage();
+                // Toast.makeText(TimelineActivity.this, "Compose Tweet button clicked", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(TimelineActivity.this, ComposeTweetActivity.class);
+                editActivityResultLauncher.launch(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
-
-    private void composeMessage() {
-    }
-
+    
 
 }
