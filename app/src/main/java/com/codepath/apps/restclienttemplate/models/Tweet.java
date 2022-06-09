@@ -13,9 +13,14 @@ public class Tweet {
     public String body;
     public String createdAt;
     public User user;
+    public String imageUrl;
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setCreatedAt(String createdAt) {
@@ -32,9 +37,11 @@ public class Tweet {
     public static Tweet fromJSONObject(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet(); // unsure if tweet is pass by reference or value, might result in error
 
-        tweet.setBody(jsonObject.getString("text"));
+        tweet.setBody(jsonObject.getString("full_text"));
         tweet.setCreatedAt(jsonObject.getString("created_at"));
-
+        if (jsonObject.getJSONObject("entities").has("media")) {
+            tweet.setImageUrl(jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url_https"));
+        }
         User user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.user = user;
 //        tweet.user = new User();

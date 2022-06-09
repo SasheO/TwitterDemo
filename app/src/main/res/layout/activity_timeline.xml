@@ -6,7 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".TimelineActivity">
 
+<<<<<<< HEAD
 <<<<<<< master
+=======
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
+        android:layout_width="405dp"
+        android:layout_height="681dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogOut">
+>>>>>>> 4d1f1e5ef7c13e8f41ba7f9e5b339113dad10308
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHomeTimeline"
         android:layout_width="405dp"
@@ -14,6 +25,7 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+<<<<<<< HEAD
         app:layout_constraintTop_toBottomOf="@+id/btnLogOut" />
 =======
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -34,6 +46,10 @@
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 >>>>>>> local
+=======
+ />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+>>>>>>> 4d1f1e5ef7c13e8f41ba7f9e5b339113dad10308
 
     <Button
         android:id="@+id/btnLogOut"

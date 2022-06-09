@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,7 +34,7 @@ import java.util.List;
 import okhttp3.Headers;
 
 public class TimelineActivity extends AppCompatActivity {
-
+    private SwipeRefreshLayout swipeContainer;
     public static final String TAG = "TimelineActivity";
     TwitterClient client;
     List<Tweet> tweetList;
@@ -43,6 +44,7 @@ public class TimelineActivity extends AppCompatActivity {
 
 
     // this is for getting the result from composeTweetActivity, revisit this for a guide: https://guides.codepath.com/android/Using-Intents-to-Create-Flows#returning-data-result-to-parent-activity
+    // i put it here because of an error that I got similar to this: https://stackoverflow.com/questions/64476827/how-to-resolve-the-error-lifecycleowners-must-call-register-before-they-are-sta
     ActivityResultLauncher<Intent> editActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -59,6 +61,7 @@ public class TimelineActivity extends AppCompatActivity {
                     }
                 }
             });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +88,50 @@ public class TimelineActivity extends AppCompatActivity {
                 Toast.makeText(TimelineActivity.this, "logging out...", Toast.LENGTH_LONG);
                 onLogoutButton();
             }
+        });
+
+        // for Swipe to refresh functionality
+        // Lookup the swipe container view
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchTimelineAsync(0);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+    public void fetchTimelineAsync(int page) {
+        // Send the network request to fetch the updated data
+        // `client` here is an instance of Android Async HTTP
+        // getHomeTimeline is an example endpoint.
+        client.getHomeTimeline(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                adapter.clear();
+                try {
+                    adapter.addAll(Tweet.fromJSONArray(json.jsonArray));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+               Log.d("DEBUG", "Fetch timeline error: ");
+
+            }
+
         });
     }
 
