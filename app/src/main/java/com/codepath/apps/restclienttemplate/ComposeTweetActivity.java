@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.parceler.Parcels;
 
 import okhttp3.Headers;
 
@@ -43,19 +48,30 @@ public class ComposeTweetActivity extends AppCompatActivity {
 
                 }
                 else{
-                    // tweet whatever they typed in
-
-                    // the toast below it temporary, comment out or delete later
-                    // Toast.makeText(ComposeTweetActivity.this, tweetBody, Toast.LENGTH_LONG).show();
+                    // tweet whatever they typed in since the message meets the character count requirement
                     client.publishTweet(new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            // the following lines only run if the Tweet is successfully published on twitter
                             Log.i("ComposeTweetActivity", "successfully published tweet");
+                            // todo: display tweet in home timeline
+                            try {
+                                Tweet newTweet = Tweet.fromJSONObject(json.jsonObject);
+                                // add intent, pass tweet back into the timeline activity, update the recycler view
+                                Intent data = new Intent();
+
+                                // pass in the created tweet (parceled)
+                                data.putExtra("tweet", Parcels.wrap(newTweet));
+                            setResult(RESULT_OK, data);
+                            finish();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
                         public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                            Log.e("ComposeTweetActivity", "could not publish tweet");
+                            Log.e("ComposeTweetActivity", "could not publish tweet", throwable);
 
                         }
                     }, tweetBody);
