@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
@@ -54,12 +58,31 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         return listTweet.size();
     }
 
+    // this is to convert time created at to relative time, got this from https://gist.github.com/nesquena/f786232f5ef72f6e10a7
+    public String getRelativeTimeAgo(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivUserPic;
         TextView tvUsername;
         TextView tvTweetBody;
         ImageView ivMedia;
+        TextView tvCreatedAt;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,16 +90,21 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvTweetBody = itemView.findViewById(R.id.tvTweetBody);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivMedia = itemView.findViewById(R.id.ivMedia);
+            tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
         }
 
         public void bind(Tweet tweet) {
             tvUsername.setText(tweet.user.screenName);
             tvTweetBody.setText(tweet.body);
+            tvCreatedAt.setText(getRelativeTimeAgo(tweet.createdAt));
             Glide.with(context).load(tweet.user.publicImageURL).into(ivUserPic);
+            // if there is an image url i.e. there is a json response for a url of the pic
             if (tweet.imageUrl != null) {
+                // set the image
                 Glide.with(context).load(tweet.imageUrl).into(ivMedia);
             }
             else{
+                // make the imageView invisible so that it doesn't cause issues in the layout of the page
                 ivMedia.setVisibility(View.GONE);
             }
         }
