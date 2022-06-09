@@ -133,11 +133,6 @@ public class TimelineActivity extends AppCompatActivity {
             }
 
         });
-
-
-
-
-
     }
 
         private void populateHomeTimeline() {
