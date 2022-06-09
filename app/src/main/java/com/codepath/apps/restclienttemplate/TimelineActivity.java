@@ -109,7 +109,7 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.miComposeTweet:
-                Toast.makeText(TimelineActivity.this, "Compose Tweet button clicked", Toast.LENGTH_LONG).show();
+                // Toast.makeText(TimelineActivity.this, "Compose Tweet button clicked", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(TimelineActivity.this, ComposeTweetActivity.class);
                 startActivity(intent);
                 return true;
@@ -118,9 +118,6 @@ public class TimelineActivity extends AppCompatActivity {
         }
 
     }
-
-    private void composeMessage() {
-    }
-
+    
 
 }

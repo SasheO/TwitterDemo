@@ -3,20 +3,28 @@ package com.codepath.apps.restclienttemplate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+
+import okhttp3.Headers;
+
 public class ComposeTweetActivity extends AppCompatActivity {
 
+    TwitterClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose_tweet);
 
+        // get reference to client parameter
+        client = TwitterApp.getRestClient(ComposeTweetActivity.this);
         EditText etTypeTweet = findViewById(R.id.etTypeTweet);
         Button btnPostTweet = findViewById(R.id.btnPostTweet);
         btnPostTweet.setOnClickListener(new View.OnClickListener() {
@@ -37,9 +45,21 @@ public class ComposeTweetActivity extends AppCompatActivity {
                 else{
                     // tweet whatever they typed in
 
-                    // this toast it temporary, comment out or delete later
-                    Toast.makeText(ComposeTweetActivity.this, tweetBody, Toast.LENGTH_LONG).show();
+                    // the toast below it temporary, comment out or delete later
+                    // Toast.makeText(ComposeTweetActivity.this, tweetBody, Toast.LENGTH_LONG).show();
+                    client.publishTweet(new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Log.i("ComposeTweetActivity", "successfully published tweet");
+                        }
 
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Log.e("ComposeTweetActivity", "could not publish tweet");
+
+                        }
+                    }, tweetBody);
+                    finish();
                 }
 
             }
@@ -47,6 +67,7 @@ public class ComposeTweetActivity extends AppCompatActivity {
 
 
     }
+
 
 
 }
