@@ -43,6 +43,7 @@ public class TimelineActivity extends AppCompatActivity {
 
 
     // this is for getting the result from composeTweetActivity, revisit this for a guide: https://guides.codepath.com/android/Using-Intents-to-Create-Flows#returning-data-result-to-parent-activity
+    // i put it here because of an error that I got similar to this: https://stackoverflow.com/questions/64476827/how-to-resolve-the-error-lifecycleowners-must-call-register-before-they-are-sta
     ActivityResultLauncher<Intent> editActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -59,6 +60,7 @@ public class TimelineActivity extends AppCompatActivity {
                     }
                 }
             });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
