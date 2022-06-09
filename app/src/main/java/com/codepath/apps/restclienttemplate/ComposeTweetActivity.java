@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ComposeTweetActivity extends AppCompatActivity {
 
@@ -22,7 +23,25 @@ public class ComposeTweetActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // what will happen when the user clicks on the button to Post Tweets?
-                // todo: Add an onClickListener on the button. When the button is clicked, it should check if the text in the text component is empty or too long (max Tweet length is 280 characters). Use a Toast to display the error, or display the composed Tweet if it fits the length constraints.
+                // todo: When the button is clicked, it should check if the text in the text component is empty or too long (max Tweet length is 280 characters). Use a Toast to display the error, or display the composed Tweet if it fits the length constraints.
+
+                // get the text input
+                String tweetBody = etTypeTweet.getText().toString();
+                if (tweetBody.length() == 0){
+                    Toast.makeText(ComposeTweetActivity.this, "Cannot make empty tweet", Toast.LENGTH_LONG).show();
+                }
+                else if (tweetBody.length() >= 80){
+                    Toast.makeText(ComposeTweetActivity.this, " Character limit: 280 characters", Toast.LENGTH_LONG).show();
+
+                }
+                else{
+                    // tweet whatever they typed in
+
+                    // this toast it temporary, comment out or delete later
+                    Toast.makeText(ComposeTweetActivity.this, tweetBody, Toast.LENGTH_LONG).show();
+
+                }
+
             }
         });
 
