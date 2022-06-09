@@ -75,5 +75,17 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     }
 
 
+    // helper function to implement pull to refresh
+    public void clear() {
+        listTweet.clear();
+        notifyDataSetChanged();
+    }
+
+    // helper function to implement pull to refresh
+    // Add a list of items -- change to type used
+    public void addAll(List<Tweet> list) {
+        listTweet.addAll(list);
+        notifyDataSetChanged();
+    }
 
 }
