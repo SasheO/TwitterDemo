@@ -60,7 +60,7 @@ Other than that, I feel more confident working with APIs and understanding the d
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright 2022 Mezisashe Ojuba
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
