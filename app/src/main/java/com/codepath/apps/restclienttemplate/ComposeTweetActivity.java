@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import org.json.JSONException;
 import org.parceler.Parcels;
 
+import java.util.Objects;
+
 import okhttp3.Headers;
 
 public class ComposeTweetActivity extends AppCompatActivity {
@@ -27,6 +30,8 @@ public class ComposeTweetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose_tweet);
+        // this sets the menu color to twitter_blue (a variable for a hex color found in colors.xml file)
+        Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.twitter_blue)));
 
         // get reference to client parameter
         client = TwitterApp.getRestClient(ComposeTweetActivity.this);
