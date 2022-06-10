@@ -118,6 +118,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         ImageButton btnLikeTweet;
         long id;
         boolean retweeted;
+        boolean liked;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -136,6 +137,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public void bind(Tweet tweet) {
             id = Long.parseLong(tweet.id_str);
             retweeted = tweet.retweeted;
+            liked = tweet.liked;
             Log.i("TweetAdapter", String.valueOf(id));
             tvUsername.setText(tweet.user.screenName);
             tvTweetBody.setText(tweet.body);
@@ -192,6 +194,48 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                             Toast.makeText(context, "unretweet unsuccessful", Toast.LENGTH_LONG).show();
                             Log.d("TweetAdapter", "did not successfully unretweet " + id + " :"+ response);
+                        }
+                    }, id);
+                }
+            }
+
+
+            if (view.getId() == btnLikeTweet.getId()){
+
+                // todo: check if tweet is already liked. if it is, call unlike func instead
+                // call like function from TwitterClient
+                if (liked==false){
+                    client.likeTweet(new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Toast.makeText(context, "liked!", Toast.LENGTH_LONG).show();
+                            Log.d("TweetAdapter", "successfully liked " + id);
+                            // todo: update the retweeted attribute in the tweet
+                            liked= !liked;
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Toast.makeText(context, "retweet unsuccessful", Toast.LENGTH_LONG).show();
+                            Log.d("TweetAdapter", "did not successfully retweet " + id + " :"+ response);
+                        }
+                    }, id);
+                }
+                else{
+                    client.unlikeTweet(new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Toast.makeText(context, "unliked!", Toast.LENGTH_LONG).show();
+                            Log.d("TweetAdapter", "successfully unliked " + id);
+                            // todo: update the retweeted attribute in the tweet
+                            liked= !liked;
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Toast.makeText(context, "unlike unsuccessful", Toast.LENGTH_LONG).show();
+                            Log.d("TweetAdapter", "did not successfully unlike " + id + " :"+ response);
                         }
                     }, id);
                 }
