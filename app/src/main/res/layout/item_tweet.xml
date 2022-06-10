@@ -40,9 +40,10 @@
 
     <ImageView
         android:id="@+id/ivMedia"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="343dp"
+        android:layout_height="245dp"
+        app:layout_constraintEnd_toEndOf="@+id/tvTweetBody"
+        app:layout_constraintStart_toEndOf="@+id/ivUserPic"
         app:layout_constraintTop_toBottomOf="@+id/tvTweetBody"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
