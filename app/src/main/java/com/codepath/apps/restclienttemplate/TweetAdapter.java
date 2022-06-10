@@ -117,6 +117,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         ImageButton btnRetweet;
         ImageButton btnLikeTweet;
         long id;
+        boolean retweeted;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -134,6 +135,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         public void bind(Tweet tweet) {
             id = Long.parseLong(tweet.id_str);
+            retweeted = tweet.retweeted;
             Log.i("TweetAdapter", String.valueOf(id));
             tvUsername.setText(tweet.user.screenName);
             tvTweetBody.setText(tweet.body);
@@ -156,12 +158,17 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public void onClick(View view) {
             // if the retweet button is clicked
             if (view.getId() == btnRetweet.getId()){
+                // todo: check if tweet is already retweeted. if it is, call unretweeet func instead
                 // call retweet function from TwitterClient
+                if (retweeted==false){
                 client.retweetTweet(new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         Toast.makeText(context, "retweeted!", Toast.LENGTH_LONG).show();
                         Log.d("TweetAdapter", "successfully retweeted " + id);
+                        // todo: update the retweeted attribute in the tweet
+                        retweeted = !retweeted;
+
                     }
 
                     @Override
@@ -170,6 +177,24 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         Log.d("TweetAdapter", "did not successfully retweet " + id + " :"+ response);
                     }
                 }, id);
+            }
+                else{
+                    client.unretweetTweet(new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Headers headers, JSON json) {
+                            Toast.makeText(context, "unretweeted!", Toast.LENGTH_LONG).show();
+                            Log.d("TweetAdapter", "successfully unretweeted " + id);
+                            // todo: update the retweeted attribute in the tweet
+                            retweeted = !retweeted;
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                            Toast.makeText(context, "unretweet unsuccessful", Toast.LENGTH_LONG).show();
+                            Log.d("TweetAdapter", "did not successfully unretweet " + id + " :"+ response);
+                        }
+                    }, id);
+                }
             }
         }
     }

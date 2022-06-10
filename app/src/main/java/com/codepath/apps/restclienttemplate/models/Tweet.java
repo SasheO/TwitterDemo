@@ -15,6 +15,7 @@ public class Tweet {
     public User user;
     public String imageUrl;
     public String id_str;
+    public boolean retweeted;
 
     public void setBody(String body) {
         this.body = body;
@@ -36,6 +37,10 @@ public class Tweet {
         this.id_str = id_str;
     }
 
+    public void setRetweeted(boolean retweeted) {
+        this.retweeted = retweeted;
+    }
+
     public Tweet(){}
 
     // function to return a tweet populating it with information from a json object
@@ -44,14 +49,14 @@ public class Tweet {
 
         tweet.setBody(jsonObject.getString("full_text"));
         tweet.setCreatedAt(jsonObject.getString("created_at"));
+        tweet.setCreatedAt(jsonObject.getString("created_at"));
         if (jsonObject.getJSONObject("entities").has("media")) {
             tweet.setImageUrl(jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url_https"));
         }
         User user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.user = user;
         tweet.setId(jsonObject.getString("id_str"));
-//        tweet.user = new User();
-//        tweet.user.fromJson(jsonObject.getJSONObject("user"));
+        tweet.setRetweeted(jsonObject.getBoolean("retweeted"));
         return  tweet;
     }
         // function to return a list of tweets gotten from a json array of tweets
