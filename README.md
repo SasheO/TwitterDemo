@@ -51,7 +51,8 @@ Here's a walkthrough of implemented user stories:
 ## Notes
 
 The most significant issue I ran into was because I was trying to use an instance of a user object to call a User class method. After much troubleshooting and help from the TAs, I now understand the difference.
-Other than that, I feel more confident working with APIs and understanding the documentation. (I coded the like/unlike and retweet/unretweet functionality from scratch, using the information from the Twitter api docs!!!)
+
+I also struggled with toggling the color of clickable vector images like retweet or like buttons. I still have not implemeneted that yet.
 
 ## Open-source libraries used
 
