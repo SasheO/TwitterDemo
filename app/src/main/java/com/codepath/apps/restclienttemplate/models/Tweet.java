@@ -16,6 +16,7 @@ public class Tweet {
     public String imageUrl;
     public String id_str;
     public boolean retweeted;
+    public boolean liked;
 
     public void setBody(String body) {
         this.body = body;
@@ -41,6 +42,10 @@ public class Tweet {
         this.retweeted = retweeted;
     }
 
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
     public Tweet(){}
 
     // function to return a tweet populating it with information from a json object
@@ -57,6 +62,7 @@ public class Tweet {
         tweet.user = user;
         tweet.setId(jsonObject.getString("id_str"));
         tweet.setRetweeted(jsonObject.getBoolean("retweeted"));
+        tweet.setLiked(jsonObject.getBoolean("favorited"));
         return  tweet;
     }
         // function to return a list of tweets gotten from a json array of tweets
