@@ -6,14 +6,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,9 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.Headers;
+
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     Context context;
+    TwitterClient client = TwitterApp.getRestClient(context);
     List<Tweet> listTweet;
     private static final String TAG = "TweetAdapter";
     private static final int SECOND_MILLIS = 1000;
@@ -56,6 +62,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     Tweet tweet = listTweet.get(position);
     holder.bind(tweet); // this is defined elsewhere in the class
+
+
     }
 
     // this tells android how many items in total the recycler view is dealing with
@@ -98,13 +106,17 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         return "";
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    // thiis has to implement View.OnClickListener so that retweet and like buttons can be clicked
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView ivUserPic;
         TextView tvUsername;
         TextView tvTweetBody;
         ImageView ivMedia;
         TextView tvCreatedAt;
+        ImageButton btnRetweet;
+        ImageButton btnLikeTweet;
+        long id;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,12 +125,21 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivMedia = itemView.findViewById(R.id.ivMedia);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
+            btnLikeTweet = itemView.findViewById(R.id.btnLikeTweet);
+            btnRetweet = itemView.findViewById(R.id.btnRetweet);
+            btnLikeTweet.setOnClickListener(this);
+            btnRetweet.setOnClickListener(this);
+
         }
 
         public void bind(Tweet tweet) {
+            id = Long.parseLong(tweet.id_str);
+            Log.i("TweetAdapter", String.valueOf(id));
             tvUsername.setText(tweet.user.screenName);
             tvTweetBody.setText(tweet.body);
             tvCreatedAt.setText(getRelativeTimeAgo(tweet.createdAt));
+            btnRetweet.setImageResource(R.drawable.ic_vector_retweet);
+            btnLikeTweet.setImageResource(R.drawable.ic_vector_heart);
             Glide.with(context).load(tweet.user.publicImageURL).into(ivUserPic);
             // if there is an image url i.e. there is a json response for a url of the pic
             if (tweet.imageUrl != null) {
@@ -128,6 +149,27 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             else{
                 // make the imageView invisible so that it doesn't cause issues in the layout of the page
                 ivMedia.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+            // if the retweet button is clicked
+            if (view.getId() == btnRetweet.getId()){
+                // call retweet function from TwitterClient
+                client.retweetTweet(new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        Toast.makeText(context, "retweeted!", Toast.LENGTH_LONG).show();
+                        Log.d("TweetAdapter", "successfully retweeted " + id);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                        Toast.makeText(context, "retweet unsuccessful", Toast.LENGTH_LONG).show();
+                        Log.d("TweetAdapter", "did not successfully retweet " + id + " :"+ response);
+                    }
+                }, id);
             }
         }
     }

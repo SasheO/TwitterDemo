@@ -14,6 +14,7 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String imageUrl;
+    public String id_str;
 
     public void setBody(String body) {
         this.body = body;
@@ -31,6 +32,10 @@ public class Tweet {
         this.user = user;
     }
 
+    public void setId(String id_str) {
+        this.id_str = id_str;
+    }
+
     public Tweet(){}
 
     // function to return a tweet populating it with information from a json object
@@ -44,6 +49,7 @@ public class Tweet {
         }
         User user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.user = user;
+        tweet.setId(jsonObject.getString("id_str"));
 //        tweet.user = new User();
 //        tweet.user.fromJson(jsonObject.getJSONObject("user"));
         return  tweet;
