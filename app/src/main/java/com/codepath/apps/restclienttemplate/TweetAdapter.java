@@ -240,6 +240,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     }, id);
                 }
             }
+
+            // if the user just clicks on the tweetBody, go to tweet details page
+            if (view.getId() == tvTweetBody.getId()){
+                // todo: tweet details page, will need to use context to create an intent
+            }
         }
     }
 
