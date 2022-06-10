@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -85,10 +86,12 @@ public class TimelineActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(TimelineActivity.this, "logging out...", Toast.LENGTH_LONG);
+                Toast.makeText(TimelineActivity.this, "logging out...", Toast.LENGTH_LONG).show();
                 onLogoutButton();
             }
         });
+
+
 
         // for Swipe to refresh functionality
         // Lookup the swipe container view
@@ -109,6 +112,8 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
     }
+
+
 
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
